@@ -5,7 +5,6 @@ How to program a simple todo list app for Android
 ## Dependencies
 
 // RecyclerView dependency
-
 implementation 'com.android.support:recyclerview-v7:28.0.0'
 
 // FAB dependency
