@@ -2,6 +2,28 @@
 
 Simple todo list app for Android
 
+## Create class TaskEntry
+
+    package com.example.todolist;
+
+    import java.util.Date;
+
+    public class TaskEntry {
+        private int id;
+        private String description;
+
+        public TaskEntry(int id, String description) {
+            this.id = id;
+            this.description = description;
+        }
+
+        public TaskEntry(String description) {
+            this.description = description;
+        }
+
+        // getters and setters here
+    }
+
 ## Modify activity_main.xml
 
 FrameLayout
@@ -30,50 +52,29 @@ LinearLayout
  
     public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     
+        private List<TaskEntry> mTasks;
+        
         ...
-    
+        
+        class TaskViewHolder extends RecyclerView.ViewHolder {
+
+            ...
+            
+        }
     }
 
-## Create class TaskEntry
-
-    package com.example.todolist;
-
-    import java.util.Date;
-
-    public class TaskEntry {
-        private int id;
-        private String description;
-        private int priority;
-        private Date updatedAt;
-
-        public TaskEntry(String description, int priority, Date updatedAt) {
-            this.description = description;
-            this.priority = priority;
-            this.updatedAt = updatedAt;
-        }
-
-        public TaskEntry(int id, String description, int priority, Date updatedAt) {
-            this.id = id;
-            this.description = description;
-            this.priority = priority;
-            this.updatedAt = updatedAt;
-        }
-
-        // getters and setters here
-    }
-
-## (1) Add Room dependency
+## Add Room dependency
 
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
-## (2) Annotate class with Entity(tablename = "task")
+## Annotate class with Entity(tablename = "task")
 
-## (3) Annotate the id with PrimaryKey(autoGenerate = true)
+## Annotate the id with PrimaryKey(autoGenerate = true)
 
-## (4) Annotate the 3 parameters constructor with @Ignore
+## Annotate the 1 parameters constructor with @Ignore
 
-Create interface TaskDao
+## Create interface TaskDao
 
     package com.example.android.todolist.database;
 
@@ -102,13 +103,11 @@ Create interface TaskDao
         void deleteTask(TaskEntry taskEntry);
     }
     
-Create class AppDatabase
+## Create class AppDatabase
 
     @Database(entities = {TaskEntry.class}, version = 1, exportSchema = false)
-    @TypeConverters(DateConverter.class)
     public abstract class AppDatabase extends RoomDatabase {
 
-        private static final String LOG_TAG = AppDatabase.class.getSimpleName();
         private static final Object LOCK = new Object();
         private static final String DATABASE_NAME = "todolist";
         private static AppDatabase sInstance;
@@ -116,14 +115,12 @@ Create class AppDatabase
         public static AppDatabase getInstance(Context context) {
             if (sInstance == null) {
                 synchronized (LOCK) {
-                    Log.d(LOG_TAG, "Creating new database instance");
                     sInstance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, AppDatabase.DATABASE_NAME)
-                            // TODO (2) call allowMainThreadQueries before building the instance
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
-            Log.d(LOG_TAG, "Getting the database instance");
             return sInstance;
         }
 
@@ -131,7 +128,7 @@ Create class AppDatabase
 
     }
 
-Create class DateConverter
+## Create class DateConverter
 
     package com.example.android.todolist.database;
 
@@ -151,21 +148,4 @@ Create class DateConverter
         }
     }
     
-TODO's
-
-    // TODO (1) Make updatedAt match a column named updated_at. Tip: Use the ColumnInfo annotation
-    // TODO (2) call allowMainThreadQueries before building the instance
-    // TODO (3) Create AppDatabase member variable for the Database
-    // TODO (4) Initialize member variable for the data base
-    // TODO (5) Create a description variable and assign to it the value in the edit text
-    // TODO (6) Create a priority variable and assign the value returned by getPriorityFromViews()
-    // TODO (7) Create a date variable and assign to it the current Date
-    // TODO (8) Create taskEntry variable using the variables defined above
-    // TODO (9) Use the taskDao in the AppDatabase variable to insert the taskEntry
-    // TODO (10) call finish() to come back to MainActivity
-    
-    // TODO (1) Create AppDatabase member variable for the Database
-    // TODO (2) Initialize member variable for the data base
-    // TODO (3) Call the adapter's setTasks method using the result
-    
-To be continued...
+## To be continued...
