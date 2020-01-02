@@ -2,7 +2,7 @@
 
 Simple todo list app for Android
 
-## Modify MainActivity
+## Modify activity_main.xml
 
 FrameLayout
 - Button (buttonLoad) layout_gravity="bottom|left"
@@ -10,23 +10,23 @@ FrameLayout
 
 ## Add RecyclerView
 
-Add RecyclerView dependency
+### Add RecyclerView dependency
 
     implementation 'com.android.support:recyclerview-v7:28.0.0'
 
-Add RecyclerView to layout
+### Add RecyclerView to activity_main.xml
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTasks"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-Create task_layout.xml
+### Create layout item_task.xml
 
 LinearLayout
 - TextView (textViewTaskDescription)
 
-Create class TaskAdapter
+### Create class TaskAdapter
  
     public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     
@@ -34,7 +34,7 @@ Create class TaskAdapter
     
     }
 
-## Create TaskEntry class
+## Create class TaskEntry
 
     package com.example.todolist;
 
