@@ -85,5 +85,96 @@ Create task_layout.xml
 Create class TaskAdapter
  
     public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {}
+
+Create class AppDatabase
+
+    @Database(entities = {TaskEntry.class}, version = 1, exportSchema = false)
+    @TypeConverters(DateConverter.class)
+    public abstract class AppDatabase extends RoomDatabase {
+
+        private static final String LOG_TAG = AppDatabase.class.getSimpleName();
+        private static final Object LOCK = new Object();
+        private static final String DATABASE_NAME = "todolist";
+        private static AppDatabase sInstance;
+
+        public static AppDatabase getInstance(Context context) {
+            if (sInstance == null) {
+                synchronized (LOCK) {
+                    Log.d(LOG_TAG, "Creating new database instance");
+                    sInstance = Room.databaseBuilder(context.getApplicationContext(),
+                            AppDatabase.class, AppDatabase.DATABASE_NAME)
+                            // TODO (2) call allowMainThreadQueries before building the instance
+                            .build();
+                }
+            }
+            Log.d(LOG_TAG, "Getting the database instance");
+            return sInstance;
+        }
+
+        public abstract TaskDao taskDao();
+
+    }
+
+Create class DateConverter
+
+    package com.example.android.todolist.database;
+
+    import android.arch.persistence.room.TypeConverter;
+
+    import java.util.Date;
+
+    public class DateConverter {
+        @TypeConverter
+        public static Date toDate(Long timestamp) {
+            return timestamp == null ? null : new Date(timestamp);
+        }
+
+        @TypeConverter
+        public static Long toTimestamp(Date date) {
+            return date == null ? null : date.getTime();
+        }
+    }
+    
+Create class TaskDao
+
+    package com.example.android.todolist.database;
+
+    import android.arch.persistence.room.Dao;
+    import android.arch.persistence.room.Delete;
+    import android.arch.persistence.room.Insert;
+    import android.arch.persistence.room.OnConflictStrategy;
+    import android.arch.persistence.room.Query;
+    import android.arch.persistence.room.Update;
+
+    import java.util.List;
+
+    @Dao
+    public interface TaskDao {
+
+        @Query("SELECT * FROM task ORDER BY priority")
+        List<TaskEntry> loadAllTasks();
+
+        @Insert
+        void insertTask(TaskEntry taskEntry);
+
+        @Update(onConflict = OnConflictStrategy.REPLACE)
+        void updateTask(TaskEntry taskEntry);
+
+        @Delete
+        void deleteTask(TaskEntry taskEntry);
+    }
+    
+TODO's
+
+    // TODO (1) Make updatedAt match a column named updated_at. Tip: Use the ColumnInfo annotation
+    // TODO (2) call allowMainThreadQueries before building the instance
+    // TODO (3) Create AppDatabase member variable for the Database
+    // TODO (4) Initialize member variable for the data base
+    // TODO (5) Create a description variable and assign to it the value in the edit text
+    // TODO (6) Create a priority variable and assign the value returned by getPriorityFromViews()
+    // TODO (7) Create a date variable and assign to it the current Date
+    // TODO (8) Create taskEntry variable using the variables defined above
+    // TODO (9) Use the taskDao in the AppDatabase variable to insert the taskEntry
+    // TODO (10) call finish() to come back to MainActivity
     
 To be continued...
