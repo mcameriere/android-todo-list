@@ -1,32 +1,48 @@
 # android-todo-list
 
-How to program a simple todo list app for Android
+Simple todo list app for Android
 
-## Add FAB dependency
+## Create AddTaskActivity
 
-    implementation 'com.android.support:design:28.0.0'
+LinearLayout
+- EditText (editTextTaskDescription)
+- RadioGroup (radioGroupPriority)
+- Button (buttonSave)
     
-## Add FAB to MainActivity Layout
+## Modify MainActivity
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+FrameLayout
+- Button (buttonAdd) layout_gravity="bottom|right"
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:tint="@android:color/white"
-            android:src="@android:drawable/ic_input_add"/>
+## Create TaskEntry class
 
-    </FrameLayout>
+    package com.example.todolist;
 
-## Room dependency
+    import java.util.Date;
+
+    public class TaskEntry {
+        private int id;
+        private String description;
+        private int priority;
+        private Date updatedAt;
+
+        public TaskEntry(String description, int priority, Date updatedAt) {
+            this.description = description;
+            this.priority = priority;
+            this.updatedAt = updatedAt;
+        }
+
+        public TaskEntry(int id, String description, int priority, Date updatedAt) {
+            this.id = id;
+            this.description = description;
+            this.priority = priority;
+            this.updatedAt = updatedAt;
+        }
+
+        // getters and setters here
+    }
+
+## (1) Add Room dependency
 
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
