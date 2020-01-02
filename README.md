@@ -2,17 +2,37 @@
 
 Simple todo list app for Android
 
-## Create AddTaskActivity
-
-LinearLayout
-- EditText (editTextTaskDescription)
-- RadioGroup (radioGroupPriority)
-- Button (buttonSave)
-    
 ## Modify MainActivity
 
 FrameLayout
+- Button (buttonLoad) layout_gravity="bottom|left"
 - Button (buttonAdd) layout_gravity="bottom|right"
+
+## Add RecyclerView
+
+Add RecyclerView dependency
+
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+
+Add RecyclerView to layout
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+Create task_layout.xml
+
+LinearLayout
+- TextView (textViewTaskDescription)
+
+Create class TaskAdapter
+ 
+    public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+    
+        ...
+    
+    }
 
 ## Create TaskEntry class
 
@@ -53,39 +73,35 @@ FrameLayout
 
 ## (4) Annotate the 3 parameters constructor with @Ignore
 
-## Add RecyclerView
+Create interface TaskDao
 
-Add RecyclerView dependency
+    package com.example.android.todolist.database;
 
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    import android.arch.persistence.room.Dao;
+    import android.arch.persistence.room.Delete;
+    import android.arch.persistence.room.Insert;
+    import android.arch.persistence.room.OnConflictStrategy;
+    import android.arch.persistence.room.Query;
+    import android.arch.persistence.room.Update;
 
-Add RecyclerView to layout
+    import java.util.List;
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewTasks"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    @Dao
+    public interface TaskDao {
 
-Create task_layout.xml
+        @Query("SELECT * FROM task ORDER BY priority")
+        List<TaskEntry> loadAllTasks();
 
-    <LinearLayout android:orientation="horizontal"
+        @Insert
+        void insertTask(TaskEntry taskEntry);
 
-        <LinearLayout android:orientation="vertical">
+        @Update(onConflict = OnConflictStrategy.REPLACE)
+        void updateTask(TaskEntry taskEntry);
 
-            <TextView android:id="@+id/textViewTaskDescription" />
-
-            <TextView android:id="@+id/textViewTaskUpdatedAt" />
-
-        </LinearLayout>
-
-        <TextView android:id="@+id/textViewTaskPriority" />
-
-    </LinearLayout>
-
-Create class TaskAdapter
- 
-    public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {}
-
+        @Delete
+        void deleteTask(TaskEntry taskEntry);
+    }
+    
 Create class AppDatabase
 
     @Database(entities = {TaskEntry.class}, version = 1, exportSchema = false)
@@ -135,35 +151,6 @@ Create class DateConverter
         }
     }
     
-Create class TaskDao
-
-    package com.example.android.todolist.database;
-
-    import android.arch.persistence.room.Dao;
-    import android.arch.persistence.room.Delete;
-    import android.arch.persistence.room.Insert;
-    import android.arch.persistence.room.OnConflictStrategy;
-    import android.arch.persistence.room.Query;
-    import android.arch.persistence.room.Update;
-
-    import java.util.List;
-
-    @Dao
-    public interface TaskDao {
-
-        @Query("SELECT * FROM task ORDER BY priority")
-        List<TaskEntry> loadAllTasks();
-
-        @Insert
-        void insertTask(TaskEntry taskEntry);
-
-        @Update(onConflict = OnConflictStrategy.REPLACE)
-        void updateTask(TaskEntry taskEntry);
-
-        @Delete
-        void deleteTask(TaskEntry taskEntry);
-    }
-    
 TODO's
 
     // TODO (1) Make updatedAt match a column named updated_at. Tip: Use the ColumnInfo annotation
@@ -176,5 +163,9 @@ TODO's
     // TODO (8) Create taskEntry variable using the variables defined above
     // TODO (9) Use the taskDao in the AppDatabase variable to insert the taskEntry
     // TODO (10) call finish() to come back to MainActivity
+    
+    // TODO (1) Create AppDatabase member variable for the Database
+    // TODO (2) Initialize member variable for the data base
+    // TODO (3) Call the adapter's setTasks method using the result
     
 To be continued...
