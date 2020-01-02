@@ -72,7 +72,7 @@ LinearLayout
 
 ## Annotate the id with PrimaryKey(autoGenerate = true)
 
-## Annotate the 1 parameters constructor with @Ignore
+## Annotate the 1 parameter constructor with @Ignore
 
 ## Create interface TaskDao
 
@@ -96,11 +96,6 @@ LinearLayout
         @Insert
         void insertTask(TaskEntry taskEntry);
 
-        @Update(onConflict = OnConflictStrategy.REPLACE)
-        void updateTask(TaskEntry taskEntry);
-
-        @Delete
-        void deleteTask(TaskEntry taskEntry);
     }
     
 ## Create class AppDatabase
